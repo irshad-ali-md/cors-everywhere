@@ -1,17 +1,28 @@
-const cors_proxy = require('cors-anywhere');
-const http = require('http');
+const express = require('express');
+const cors = require('cors');
+const fs = require('fs');
+const path = require('path');
 
-const host = process.env.HOST || '0.0.0.0';
-const port = process.env.PORT || 8080;
+const app = express();
+const PORT = process.env.PORT || 3000;
 
-const server = http.createServer((req, res) => {
-  cors_proxy.createServer({
-    originWhitelist: [], // Allow all origins
-    requireHeader: ['origin', 'x-requested-with'],
-    removeHeaders: ['cookie', 'cookie2']
-  }).emit('request', req, res);
+// Enable CORS for all domains
+app.use(cors());
+
+// Route to serve the JSON file
+app.get('/api/v3/spec.json', (req, res) => {
+  const filePath = path.join(__dirname, 'spec.json');
+  fs.readFile(filePath, 'utf8', (err, data) => {
+    if (err) {
+      res.status(500).send('Error reading file');
+      return;
+    }
+    res.setHeader('Content-Type', 'application/json');
+    res.send(data);
+  });
 });
 
-server.listen(port, host, () => {
-  console.log(`Running CORS Anywhere on ${host}:${port}`);
+// Start the server
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
 });
