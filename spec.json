@@ -888,9 +888,29 @@
           "Usage"
         ],
         "summary": "Get API usage data",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Usage"
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -1142,6 +1162,28 @@
             "type": "integer"
           },
           "message": {
+            "type": "string"
+          }
+        }
+      },
+      "Usage": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          },
+          "total": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "used": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "remaining": {
             "type": "string"
           }
         }
