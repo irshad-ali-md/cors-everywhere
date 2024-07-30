@@ -887,7 +887,7 @@
         "tags": [
           "Usage"
         ],
-        "summary": "Get API usage data",
+        "summary": "Get Usage API data",
         "parameters": [
           {
             "in": "path",
