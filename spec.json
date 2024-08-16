@@ -7,7 +7,7 @@
   },
   "servers": [
     {
-      "url": "https://api.strative.ai/v1"
+      "url": "https://api.strative.ai"
     }
   ],
   "paths": {
