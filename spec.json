@@ -2,7 +2,7 @@
   "openapi": "3.0.0",
   "info": {
     "title": "Strative API",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "API for managing and monitoring RAG pipelines on the Strative platform"
   },
   "servers": [
