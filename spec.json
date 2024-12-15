@@ -739,7 +739,17 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Recommendation"
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -793,7 +803,17 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Insight"
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -854,7 +874,17 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/OptimizationEvent"
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -877,7 +907,17 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/LogEntry"
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -887,27 +927,14 @@
         "tags": [
           "Usage"
         ],
-        "summary": "Get Usage API data",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "id",
-            "required": true,
-            "schema": {
-              "type": "integer"
-            }
-          }
-        ],
+        "summary": "Get API usage data",
         "responses": {
           "200": {
             "description": "OK",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Usage"
-                  }
+                  "$ref": "#/components/schemas/UsageData"
                 }
               }
             }
@@ -923,7 +950,14 @@
         "summary": "Get current API rate limits and quotas",
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LimitData"
+                }
+              }
+            }
           }
         }
       }
@@ -1163,28 +1197,142 @@
           },
           "message": {
             "type": "string"
+          },
+          "details": {
+            "type": "string"
           }
         }
       },
-      "Usage": {
+      "Recommendation": {
         "type": "object",
         "properties": {
-          "id": {
-            "type": "integer"
+          "recommendationId": {
+            "type": "integer",
+            "description": "Unique identifier for the recommendation"
           },
-          "name": {
-            "type": "string"
-          },
-          "total": {
+          "description": {
             "type": "string",
-            "format": "date-time"
+            "description": "Description of the recommendation"
           },
-          "used": {
+          "impact": {
             "type": "string",
-            "format": "date-time"
+            "description": "Impact of the recommendation",
+            "enum": [
+              "High",
+              "Medium",
+              "Low"
+            ]
           },
-          "remaining": {
-            "type": "string"
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Date and time when the recommendation was created"
+          }
+        }
+      },
+      "Insight": {
+        "type": "object",
+        "properties": {
+          "insightId": {
+            "type": "integer",
+            "description": "Unique identifier for the insight"
+          },
+          "description": {
+            "type": "string",
+            "description": "Description of the insight"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Date and time when the insight was created"
+          }
+        }
+      },
+      "OptimizationEvent": {
+        "type": "object",
+        "properties": {
+          "eventId": {
+            "type": "integer",
+            "description": "Unique identifier for the optimization event"
+          },
+          "description": {
+            "type": "string",
+            "description": "Description of the optimization event"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Date and time when the event occurred"
+          }
+        }
+      },
+      "LogEntry": {
+        "type": "object",
+        "properties": {
+          "logId": {
+            "type": "integer",
+            "description": "Unique identifier for the log entry"
+          },
+          "message": {
+            "type": "string",
+            "description": "Log message"
+          },
+          "level": {
+            "type": "string",
+            "description": "Log level (e.g., INFO, ERROR)"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Date and time when the log entry was created"
+          }
+        }
+      },
+      "UsageData": {
+        "type": "object",
+        "properties": {
+          "totalRequests": {
+            "type": "integer",
+            "description": "Total number of API requests made"
+          },
+          "requestsPerDay": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "date": {
+                  "type": "string",
+                  "format": "date",
+                  "description": "Date of the request count"
+                },
+                "count": {
+                  "type": "integer",
+                  "description": "Number of requests made on that date"
+                }
+              }
+            }
+          }
+        }
+      },
+      "LimitData": {
+        "type": "object",
+        "properties": {
+          "limitType": {
+            "type": "string",
+            "description": "Type of the limit (e.g., rate limit, quota)"
+          },
+          "currentUsage": {
+            "type": "integer",
+            "description": "Current usage of the limit"
+          },
+          "maxLimit": {
+            "type": "integer",
+            "description": "Maximum limit allowed"
+          },
+          "resetTime": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Time when the limit resets"
           }
         }
       }
